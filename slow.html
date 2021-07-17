@@ -127,7 +127,7 @@
             }else{
                 get();
                 if($('#repeat_chk').is(':checked')){
-                    timer = setInterval(get, 2000);
+                    timer = setInterval(get, 2500);
                 }
             }
             
@@ -175,6 +175,12 @@
                         $('.view').find('img:not(.hidden)').remove();
                         //無効なやつを有効に
                         $('.view').find('img.hidden').removeClass('hidden');
+                        getting = false;
+                    });
+                    $('.view').find('img.hidden').on('error', function(){
+                        console.log('failed to load img')
+                        //表示中のimgタグ削除
+                        $('.view').find('img.hidden').remove();
                         getting = false;
                     });
                     if($('#repeat_chk').is(':checked')){
