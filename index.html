@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NekoBot Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #353535;
+        }
+        header {
+            background-color: #161616;
+            box-shadow: 0px 1px 5px #000;
+        }
+        header a{
+            text-decoration: none;
+            color: #fff;
+        }
+        header span{
+            display: block;
+            height: 50px;
+            line-height: 50px;
+            font-size: 32px;
+            margin-left: 30px;
+        }
+        .setting{
+            width: 80%;
+            margin: auto;
+            padding: 0px 50px;
+            padding-top: 30px;
+            background-color: #141414;
+            color: #fff;
+            font-size: 20px;
+        }
+        .setting .error-msg{
+            display: block;
+            height: 30px;
+            font-size: 16px;
+            line-height: 20px;
+            color: red;
+        }
+        .setting select{
+            height: 40px;
+            width: 200px;
+            border-radius: 20px;
+        }
+        .setting select option{
+            padding: 0px;
+        }
+
+        .view{
+            height: calc(100vh - 190px);
+            width: calc(80% + 100px);
+            margin: auto;
+            background-color: #141414;
+            text-align: center;
+        }
+        .view img{
+            height: 100%;
+            max-width: 100%;
+            margin: auto;
+        }
+        .hidden{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/"><span>NekoBot ImageViewer</span></a>
+    </header>
+    <main>
+        <div class="setting">
+            <p class="error-msg"></p>
+            <label for="type">タイプ</label>
+            <select name="type" id="type">
+                <option disabled selected value="">--選択してください--</option>
+                <option value="food">もはや食べ物</option>
+                <option value="kemonomimi">ケモノ耳</option>
+                <option value="neko">ネコ</option>
+                <option value="kanna">カンナムカイ(メイドラゴン)</option>
+                <option value="coffee">コーヒー</option>
+                <option value="yaoi">やおい</option>
+                <option value="gah">gah</option>
+                <option value="thigh">ふともも</option>
+                <optgroup label="H">
+                    <option value="hass">hass</option>
+                    <option value="hmidriff">H midriff</option>
+                    <option value="pgif">PornGIF</option>
+                    <option value="4k">4K</option>
+                    <option value="hentai">ヘンタイ</option>
+                    <option value="holo">Holo</option>
+                    <option value="hneko">Hネコ</option>
+                    <option value="hkitsune">Hキツネ</option>
+                    <option value="anal">anal</option>
+                    <option value="hanal">hanal</option>
+                    <option value="gonewild">野生になった</option>
+                    <option value="ass">お尻</option>
+                    <option value="pussy">おまんこ</option>
+                    <option value="hthigh">2Dふともも</option>
+                    <option value="paizuri">パイズリ</option>
+                    <option value="tentacle">触手</option>
+                    <option value="boobs">おっぱい</option>
+                    <option value="hboobs">2D おっぱい</option>
+                </optgroup>
+            </select>
+            <label id="repeat_lbl" for="repeat_chk">連続取得</label>
+            <input type="checkbox" name="repeat" id="repeat_chk">
+            <button id="get_btn">取得</button>
+        </div>
+        <div class="view">
+            <img src="" alt="">
+        </div>
+        <div class="hidden">
+
+        </div>
+    </main>
+    <script>
+        var timer;
+        $('#get_btn').on('click', function (){
+            if($('#type').find(':selected').val()==""){
+                $('.error-msg').text("タイプを選択してください");
+            }else{
+                get();
+                if($('#repeat_chk').is(':checked')){
+                    timer = setInterval(get, 2000);
+                }
+            }
+            
+        });
+
+        function get(){
+            $('.error-msg').text("");
+            $('#get_btn').attr('disabled', 'true');
+            let url = 'https://nekobot.xyz/api/image?type='+$('#type').find(':selected').val();
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                timeout: 5000
+            })
+            .done(function(data) {
+                $('.view').fadeIn(100);
+                $('.view').find('img').attr('src', data.message);
+                if($('#repeat_chk').is(':checked')){
+                    //$('#repeat_chk').hide();
+                    //$('#repeat_lbl').hide();
+                    
+                }else{
+                    clearInterval(timer);
+                    $('#get_btn').attr('disabled', 'false');
+                }
+            })
+            .fail(function(XMLHttpRequest, textStatus, errorThrown){
+                $('.error-msg').text(errorThrown);
+                if(!$('#repeat_chk').is(':checked')){
+                    clearInterval(timer);
+                }
+                $('#get_btn').attr('disabled', 'false');
+            });
+        }
+    </script>
+</body>
+</html>
