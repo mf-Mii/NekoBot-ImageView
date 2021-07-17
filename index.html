@@ -152,7 +152,7 @@
                     
                 }else{
                     clearInterval(timer);
-                    $('#get_btn').attr('disabled', 'false');
+                    $('#get_btn').removeAttr('disabled');
                 }
             })
             .fail(function(XMLHttpRequest, textStatus, errorThrown){
@@ -160,7 +160,7 @@
                 if(!$('#repeat_chk').is(':checked')){
                     clearInterval(timer);
                 }
-                $('#get_btn').attr('disabled', 'false');
+                $('#get_btn').removeAttr('disabled');
             });
         }
     </script>
