@@ -67,6 +67,9 @@
         .hidden{
             display: none;
         }
+        .hidden2{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -112,12 +115,7 @@
             <input type="checkbox" name="repeat" id="repeat_chk">
             <button id="get_btn">取得</button>
         </div>
-        <div class="view">
-            <img src="" alt="">
-        </div>
-        <div class="hidden">
-
-        </div>
+        <div class="view"></div>
     </main>
     <script>
         var timer;
@@ -137,6 +135,7 @@
             $('.error-msg').text("");
             $('#get_btn').attr('disabled', 'true');
             if(!getting){
+                console.log("getting...");
                 let url = 'https://nekobot.xyz/api/image?type='+$('#type').find(':selected').val();
                 $.ajax({
                     url: url,
@@ -145,10 +144,35 @@
                     timeout: 5000
                 })
                 .done(function(data) {
+                    console.log("API done.")
                     $('.view').fadeIn(100);
-                    $('.view').find('img').attr('src', data.message);
+                    /*
+                    //現在無効な方に画像を入れる
+                    $('.view').find('img.hidden').attr('src', data.message);
                     getting = true;
-                    $('.view').find('img').on('load', function(){
+                    $('.view').find('img.hidden').on('load', function(){
+                        console.log('loading img done.')
+                        //表示中のやつにhidden2を与える
+                        $('.view').find('img:not(.hidden)').addClass('hidden2');
+                        //無効なやつを有効に
+                        $('.view').find('img.hidden').removeClass('hidden');
+                        //hidden2を無効化
+                        $('.view').find('img.hidden2').addClass('hidden');
+                        //無効化したのからhidden2を削除
+                        $('.view').find('img.hidden2').removeClass('hidden2');
+                        getting = false;
+                    });
+                    */
+                    
+                    //新規imgタグ作成
+                    $('.view').append('<img class="hidden" src='+data.message+'>');
+                    getting = true;
+                    $('.view').find('img.hidden').on('load', function(){
+                        console.log('loading img done.')
+                        //表示中のimgタグ削除
+                        $('.view').find('img:not(.hidden)').remove();
+                        //無効なやつを有効に
+                        $('.view').find('img.hidden').removeClass('hidden');
                         getting = false;
                     });
                     if($('#repeat_chk').is(':checked')){
