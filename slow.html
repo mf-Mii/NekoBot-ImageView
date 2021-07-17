@@ -113,7 +113,7 @@
             <button id="get_btn">取得</button>
         </div>
         <div class="view">
-            <img alt="">
+            <img src="" alt="">
         </div>
         <div class="hidden">
 
@@ -132,36 +132,42 @@
             }
             
         });
-
+        var getting = false;
         function get(){
             $('.error-msg').text("");
             $('#get_btn').attr('disabled', 'true');
-            let url = 'https://nekobot.xyz/api/image?type='+$('#type').find(':selected').val();
-            $.ajax({
-                url: url,
-                type: 'GET',
-                dataType: 'json',
-                timeout: 5000
-            })
-            .done(function(data) {
-                $('.view').fadeIn(100);
-                $('.view').find('img').attr('src', data.message);
-                if($('#repeat_chk').is(':checked')){
-                    //$('#repeat_chk').hide();
-                    //$('#repeat_lbl').hide();
-                    
-                }else{
-                    clearInterval(timer);
+            if(!getting){
+                let url = 'https://nekobot.xyz/api/image?type='+$('#type').find(':selected').val();
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'json',
+                    timeout: 5000
+                })
+                .done(function(data) {
+                    $('.view').fadeIn(100);
+                    $('.view').find('img').attr('src', data.message);
+                    getting = true;
+                    $('.view').find('img').on('load', function(){
+                        getting = false;
+                    });
+                    if($('#repeat_chk').is(':checked')){
+                        //$('#repeat_chk').hide();
+                        //$('#repeat_lbl').hide();
+                        
+                    }else{
+                        clearInterval(timer);
+                        $('#get_btn').removeAttr('disabled');
+                    }
+                })
+                .fail(function(XMLHttpRequest, textStatus, errorThrown){
+                    $('.error-msg').text(errorThrown);
+                    if(!$('#repeat_chk').is(':checked')){
+                        clearInterval(timer);
+                    }
                     $('#get_btn').removeAttr('disabled');
-                }
-            })
-            .fail(function(XMLHttpRequest, textStatus, errorThrown){
-                $('.error-msg').text(errorThrown);
-                if(!$('#repeat_chk').is(':checked')){
-                    clearInterval(timer);
-                }
-                $('#get_btn').removeAttr('disabled');
-            });
+                });
+            }
         }
     </script>
 </body>
