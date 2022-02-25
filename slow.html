@@ -66,6 +66,27 @@
             max-width: 100%;
             margin: auto;
         }
+
+        .log{
+            width: 80%; margin: 30px auto 0px auto;
+            max-height: 200px;
+            display: block;
+            background: #818181;
+            border: 1px solid #161616;
+            overflow-y: scroll;
+        }
+        .log ul{
+            padding: 0; margin: 0;list-style: none;
+            height: 100%;
+        }
+        .log ul li{
+            border-bottom: 1px solid #b0b0b0;
+            color: #00ff00;
+        }
+        .log ul li a{
+            color: #fff;
+        }
+
         .hidden{
             display: none;
         }
@@ -118,6 +139,10 @@
             <button id="get_btn">取得</button>
         </div>
         <div class="view"></div>
+        <div class="log">
+            <ul>
+            </ul>
+        </div>
     </main>
     <script>
         var timer;
@@ -166,6 +191,9 @@
                     });
                     */
                     
+                    //ログ記入
+                    $('.log ul').append('<li>GET <a href="'+data.message+'" target="_blank">'+data.message+'</a></li>');
+                    $('.log').scrollTop($('.log ul').height());
                     //新規imgタグ作成
                     $('.view').append('<img class="hidden" src='+data.message+'>');
                     getting = true;

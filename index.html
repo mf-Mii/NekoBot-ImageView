@@ -116,6 +116,10 @@
         <div class="view">
             <img alt="">
         </div>
+        <div class="log">
+            <ul>
+            </ul>
+        </div>
         <div class="hidden">
 
         </div>
@@ -147,6 +151,10 @@
             .done(function(data) {
                 $('.view').fadeIn(100);
                 $('.view').find('img').attr('src', data.message);
+                
+                //ログ記入
+                $('.log ul').append('<li>GET <a href="'+data.message+'" target="_blank">'+data.message+'</a></li>');
+                $('.log').scrollTop($('.log ul').height());
                 if($('#repeat_chk').is(':checked')){
                     //$('#repeat_chk').hide();
                     //$('#repeat_lbl').hide();
